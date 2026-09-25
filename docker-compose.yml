@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:17
+    container_name: nam-ai-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: namai
+      POSTGRES_PASSWORD: namai_dev_password
+      POSTGRES_DB: namai
+    ports:
+      - "5433:5432"   # 5432 is taken by the Postgres installed on this Mac
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U namai -d namai"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

@@ -1,10 +1,8 @@
 import { redirect } from "next/navigation";
-import { Chat } from "@/components/chat";
-import { getCurrentUser } from "@/lib/session";
+import { connection } from "next/server";
 
-// The chat screen. Server component: it checks the session before rendering anything.
+// "/" always starts a fresh chat with a new random id.
 export default async function Home() {
-  const user = await getCurrentUser();
-  if (!user) redirect("/sign-in");
-  return <Chat userName={user.name} userEmail={user.email} />;
+  await connection(); // render per request, so every visit gets its own id
+  redirect(`/chat/${crypto.randomUUID()}`);
 }
